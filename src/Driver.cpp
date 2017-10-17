@@ -145,7 +145,47 @@ void testLibraries(int count) {
 
     }
 
+#ifdef HAVE_OGRE
+    {
+            std::cout << "Testing Ogre library Matrix4 class." << std::endl;
+        #ifdef ANDROID
+            LOGI("Testing CML library Matrix4 class.");
+        #endif
+            Ogre::Matrix4* inputA = generateOgreMat4s(count);
+            Ogre::Matrix4* inputB = generateOgreMat4s(count);
+            Ogre::Matrix4* output = generateOgreMat4s(count);
 
+            std::cout << "Performing additions." << std::endl;
+        #ifdef ANDROID
+            LOGI("Performing additions.");
+        #endif
+            // Time how long it takes to add [count] matrices NUM_TESTS times.
+            struct timeval start, end;
+            gettimeofday(&start, NULL);
+            for(int i = 0; i < NUM_TESTS; i++) {
+                test_ogre_mat4_addition(inputA, inputB, output, count);
+            }
+            gettimeofday(&end, NULL);
+            difference(start, end);
+        
+            std::cout << "Performing multiplications." << std::endl;
+        #ifdef ANDROID
+            LOGI("Performing multiplications.");
+        #endif
+            // Time how long it takes to multiply [count] matrices NUM_TESTS times.
+            gettimeofday(&start, NULL);
+            for(int i = 0; i < NUM_TESTS; i++) {
+                test_ogre_mat4_multiplication(inputA, inputB, output, count);
+            }
+            gettimeofday(&end, NULL);
+            difference(start, end);
+        
+            delete[] inputA;
+            delete[] inputB;
+            delete[] output;
+        
+        }
+#endif
 }
 
 float* generateRandomNumbers(int count) {
@@ -170,6 +210,42 @@ void difference(timeval& start, timeval& end) {
     LOGI(ss.str().c_str());
 #endif
 }
+
+#ifdef HAVE_OGRE
+Ogre::Matrix4* generateOgreMat4s(int count) {
+    float* randomNumbers = generateRandomNumbers(count);
+
+    Ogre::Matrix4* mats = new Ogre::Matrix4[count];
+    for(int i = 0; i < count; i++) {
+        mats[i][0][0] = randomNumbers[i];
+        mats[i][1][1] = randomNumbers[i];
+        mats[i][2][2] = randomNumbers[i];
+        mats[i][3][3] = 1.0f;
+    }
+
+    delete[] randomNumbers;
+
+    return mats;
+}
+
+void test_ogre_mat4_addition(Ogre::Matrix4* inputA,
+    Ogre::Matrix4* inputB,
+    Ogre::Matrix4* output,
+    int count) {
+for(int i = 0; i < count; i++) {
+output[i] = inputA[i] + inputB[i];
+}
+}
+
+void test_ogre_mat4_multiplication(Ogre::Matrix4* inputA,
+    Ogre::Matrix4* inputB,
+    Ogre::Matrix4* output,
+          int count) {
+for(int i = 0; i < count; i++) {
+output[i] = inputA[i] * inputB[i];
+}
+}
+#endif
 
 Eigen::Matrix4f* generateEigenMat4s(int count) {
     float* randomNumbers = generateRandomNumbers(count);

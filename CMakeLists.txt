@@ -8,6 +8,12 @@ include_directories(lib/CML1)
 include_directories(lib/eigen)
 include_directories(lib/glm)
 
+find_package(OGRE 1.10)
+if(OGRE_FOUND)
+include_directories(${OGRE_INCLUDE_DIRS})
+add_definitions(-DHAVE_OGRE)
+endif()
+
 # NOTE:
 # This next section is copy pasted from the Eigen CMakeLists.txt located in the
 # lib folder. I have just set some defaults to ON.

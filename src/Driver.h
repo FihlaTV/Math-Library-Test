@@ -6,6 +6,11 @@
 //#ifndef ANDROID
 #include <glm/glm.hpp>
 //#endif
+
+#ifdef HAVE_OGRE
+#include <OgreMatrix4.h>
+#endif
+
 /**
  * Wrapper function that performs all the testing. This is not part of Main.cpp
  * because the function can be used on Android here, which doesn't use a
@@ -24,6 +29,27 @@ void difference(timeval& start, timeval& end);
  * of All Random Number Generator'.
  */
 float* generateRandomNumbers(int count);
+
+#ifdef HAVE_OGRE
+/// OGRE
+Ogre::Matrix4* generateOgreMat4s(int count);
+
+/**
+ * For each index, i, up to count, perform output[i] = inputA[i] + inputB[i].
+ */
+void test_ogre_mat4_addition(Ogre::Matrix4* inputA,
+                              Ogre::Matrix4* inputB,
+                              Ogre::Matrix4* output,
+                              int count);
+
+/**
+ * For each index, i, up to count, perform output[i] = inputA[i] * inputB[i].
+ */
+void test_ogre_mat4_multiplication(Ogre::Matrix4* inputA,
+                                    Ogre::Matrix4* inputB,
+                                    Ogre::Matrix4* output,
+                                    int count);
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 // Eigen Library
