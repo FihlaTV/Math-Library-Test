@@ -15,10 +15,11 @@ const int NUM_TESTS = 1000000;
 #endif
 
 void testLibraries(int count) {
+    std::cout << "| Library | additions | multiplications |" << std::endl;
+    std::cout << "|---------|-----------|-----------------|" << std::endl;
+
     {
-
-    std::cout << "Testing Eigen library Matrix4f class." << std::endl;
-
+    std::cout << "| Eigen\t| ";
 #ifdef ANDROID
     LOGI("Testing Eigen library Matrix4f class.");
 #endif
@@ -26,8 +27,6 @@ void testLibraries(int count) {
     Eigen::Matrix4f* inputA = generateEigenMat4s(count);
     Eigen::Matrix4f* inputB = generateEigenMat4s(count);
     Eigen::Matrix4f* output = generateEigenMat4s(count);
-
-    std::cout << "Performing additions." << std::endl;
 
 #ifdef ANDROID
     LOGI("Performing additions.");
@@ -46,7 +45,7 @@ void testLibraries(int count) {
     LOGI("Performing multiplications.");
 #endif
 
-    std::cout << "Performing multiplications." << std::endl;
+    std::cout << "\t| ";
 
     // Time how long it takes to multiply [count] matrices NUM_TESTS times.
     gettimeofday(&start, NULL);
@@ -55,6 +54,7 @@ void testLibraries(int count) {
     }
     gettimeofday(&end, NULL);
     difference(start, end);
+    std::cout << "\t|" << std::endl;
 
     delete[] inputA;
     delete[] inputB;
@@ -64,7 +64,7 @@ void testLibraries(int count) {
 
     {
 
-    std::cout << "Testing GLM library Matrix4f class." << std::endl;
+    std::cout << "| GLM\t| ";
 
 #ifdef ANDROID
     LOGI("Testing GLM library Matrix4f class.");
@@ -74,7 +74,6 @@ void testLibraries(int count) {
     glm::mat4* inputB = generateGLMMat4s(count);
     glm::mat4* output = generateGLMMat4s(count);
 
-    std::cout << "Performing additions." << std::endl;
 #ifdef ANDROID
     LOGI("Performing additions.");
 #endif
@@ -87,7 +86,7 @@ void testLibraries(int count) {
     gettimeofday(&end, NULL);
     difference(start, end);
 
-    std::cout << "Performing multiplications." << std::endl;
+    std::cout << "\t| ";
 #ifdef ANDROID
     LOGI("Performing multiplications.");
 #endif
@@ -98,6 +97,7 @@ void testLibraries(int count) {
     }
     gettimeofday(&end, NULL);
     difference(start, end);
+    std::cout << "\t|" << std::endl;
 
     delete[] inputA;
     delete[] inputB;
@@ -106,7 +106,7 @@ void testLibraries(int count) {
     }
     {
 
-    std::cout << "Testing CML library Matrix4f class." << std::endl;
+    std::cout << "| CML1\t| ";
 #ifdef ANDROID
     LOGI("Testing CML library Matrix4f class.");
 #endif
@@ -114,7 +114,6 @@ void testLibraries(int count) {
     cml::matrix44f_c* inputB = generateCMLMat4s(count);
     cml::matrix44f_c* output = generateCMLMat4s(count);
 
-    std::cout << "Performing additions." << std::endl;
 #ifdef ANDROID
     LOGI("Performing additions.");
 #endif
@@ -127,7 +126,7 @@ void testLibraries(int count) {
     gettimeofday(&end, NULL);
     difference(start, end);
 
-    std::cout << "Performing multiplications." << std::endl;
+    std::cout << " | ";
 #ifdef ANDROID
     LOGI("Performing multiplications.");
 #endif
@@ -138,6 +137,7 @@ void testLibraries(int count) {
     }
     gettimeofday(&end, NULL);
     difference(start, end);
+    std::cout << " |" << std::endl;
 
     delete[] inputA;
     delete[] inputB;
@@ -147,7 +147,7 @@ void testLibraries(int count) {
 
 #ifdef HAVE_OGRE
     {
-            std::cout << "Testing Ogre library Matrix4 class." << std::endl;
+        std::cout << "| Ogre\t| ";
         #ifdef ANDROID
             LOGI("Testing CML library Matrix4 class.");
         #endif
@@ -155,7 +155,6 @@ void testLibraries(int count) {
             Ogre::Matrix4* inputB = generateOgreMat4s(count);
             Ogre::Matrix4* output = generateOgreMat4s(count);
 
-            std::cout << "Performing additions." << std::endl;
         #ifdef ANDROID
             LOGI("Performing additions.");
         #endif
@@ -168,7 +167,7 @@ void testLibraries(int count) {
             gettimeofday(&end, NULL);
             difference(start, end);
         
-            std::cout << "Performing multiplications." << std::endl;
+            std::cout << " | ";
         #ifdef ANDROID
             LOGI("Performing multiplications.");
         #endif
@@ -179,7 +178,8 @@ void testLibraries(int count) {
             }
             gettimeofday(&end, NULL);
             difference(start, end);
-        
+            std::cout << " |" << std::endl;
+
             delete[] inputA;
             delete[] inputB;
             delete[] output;
@@ -204,8 +204,8 @@ void difference(timeval& start, timeval& end) {
     useconds = end.tv_usec - start.tv_usec;
     mtime = ((seconds) * 1000 + useconds / 1000.0) + 0.5;
     std::stringstream ss;
-    ss << "Took " << mtime << " milliseconds.";
-    std::cout << ss.str() << std::endl;
+    ss << mtime << " ms";
+    std::cout << ss.str();
 #ifdef ANDROID
     LOGI(ss.str().c_str());
 #endif
