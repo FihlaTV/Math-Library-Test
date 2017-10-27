@@ -4,9 +4,9 @@ cmake_minimum_required(VERSION 2.8)
 project(MathLibraryTest)
 
 # All libraries are header only.
-include_directories(lib/CML1)
-include_directories(lib/eigen)
-include_directories(lib/glm)
+include_directories(${CMAKE_SOURCE_DIR}/lib/CML1)
+include_directories(${CMAKE_SOURCE_DIR}/lib/eigen)
+include_directories(${CMAKE_SOURCE_DIR}/lib/glm)
 
 find_package(OGRE 1.10)
 if(OGRE_FOUND)
@@ -62,7 +62,7 @@ if(ANDROID)
     option(EIGEN_TEST_NEON "Enable/Disable Neon in tests/examples" ON)
   if(EIGEN_TEST_NEON)
       #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mfloat-abi=softfp -mfpu=neon -mcpu=cortex-a8")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mfloat-abi=softfp -mfpu=neon")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pie -mfpu=neon")
     message(STATUS "Enabling NEON in tests/examples")
   endif()
 
@@ -75,11 +75,7 @@ if(ANDROID)
     set(LIBRARY_OUTPUT_PATH_ROOT "${PROJECT_SOURCE_DIR}/android" CACHE PATH
         "library output path")
 
-    message(STATUS "Library output path root is " ${LIBRARY_OUTPUT_PATH_ROOT})
-    set(ARM_TARGET "armeabi-v7a" CACHE STRING "arm target to use" FORCE)
-   message(STATUS ${ARM_TARGET})
-   add_library(MathTest SHARED src/Driver.cpp src/mother.cpp src/androidactivity.cpp)
-   # add_library(MathTest SHARED src/androidactivity.cpp src/mother.cpp)
+   # add_library(MathTest SHARED src/Driver.cpp src/mother.cpp src/androidactivity.cpp)
 else()
   option(EIGEN_TEST_SSE2 "Enable/Disable SSE2 in tests/examples" ON)
   if(EIGEN_TEST_SSE2)
@@ -124,7 +120,8 @@ else()
       message(STATUS "Enabling OpenMP in tests/examples")
     endif()
   endif()
-
-    # Add a test program.
-add_executable(Main src/mother.cpp src/Main.cpp src/Driver.cpp)
 endif(ANDROID)
+
+# Add a test program.
+# Android: adb push bin/Main /data/local/tmp/
+add_executable(Main src/mother.cpp src/Main.cpp src/Driver.cpp)

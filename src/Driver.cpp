@@ -9,6 +9,7 @@
 const int NUM_TESTS = 1000000;
 //const int NUM_TESTS = 10000000;
 
+#undef ANDROID
 #ifdef ANDROID
 #include <android/log.h>
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "native-activity", __VA_ARGS__))
